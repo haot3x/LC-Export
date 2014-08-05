@@ -1,5 +1,11 @@
-LC-Fetcher
+LC-Export
 ==========
+#About
+
+Tool to export your submissions from leetcode website
+
+---
+#Setup
 
 ### create virtualenv
     $ virtualenv venv
@@ -10,5 +16,8 @@ LC-Fetcher
 ### pip
     pip freeze > requirements.txt
     pip install -r requirements.txt
+
+---
+
 
 
