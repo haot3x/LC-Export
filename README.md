@@ -5,6 +5,12 @@ LC-Export
 Tool to export your submissions from leetcode website
 
 ---
+
+# Usage
+
+TODO
+
+---
 #Setup
 
 ### create virtualenv
