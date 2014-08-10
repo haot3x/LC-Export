@@ -20,7 +20,7 @@ TODO
 ### deactivate virtualenv
     $ deactivate
 ### pip
-    pip freeze > requirements.txt
+    pip freeze > requirements.txt.ori
     pip install -r requirements.txt
 
 ---
