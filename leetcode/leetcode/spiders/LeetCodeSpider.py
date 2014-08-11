@@ -6,25 +6,28 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.linkextractors import LinkExtractor
 from scrapy.contrib.spiders import Rule
 from scrapy.selector import Selector
+import ConfigParser
+import os.path
 
 
 class LeetCodeSpider(InitSpider):
     name = 'leetcode'
     allowed_domains = ["leetcode.com"]
-    login_urls = 'https://oj.leetcode.com/accounts/login/'
-    start_urls = ['http://oj.leetcode.com/problems/']
-    # _extractor = SgmlLinkExtractor()
-    # _extractor = LinkExtractor()
-    # rules = (    
-    #     Rule(_extractor,callback='parse_ac_problem',follow=True) 
-    #     )
 
-    USEREMAIL = 'foo'
-    PASSWORD = 'bar'
+    config = ConfigParser.RawConfigParser()
+    curr_dir = os.path.abspath(os.path.dirname(__file__))
+    path = os.path.join(curr_dir, '../../../settings.cfg')
+    config.read(path)
 
+    login_url = config.get('leetcode','login_url')
+    start_urls = [config.get('leetcode','problems_url')]
+    USEREMAIL = config.get('leetcode','USEREMAIL')
+    PASSWORD = config.get('leetcode','PASSWORD')
+
+    
     def init_request(self):
         """This function is called before crawling starts."""
-        return Request(url=self.login_urls, callback=self.login)
+        return Request(url=self.login_url, callback=self.login)
     
     def login(self, response):
         """Generate a login request."""
@@ -48,11 +51,16 @@ class LeetCodeSpider(InitSpider):
             print "\n\nSUBMISSION GOOD!!\n\n"
             if "scope.code.java" in response.body:
                 print "scope.code.java FOUND"
-                startIndex = response.body.find("scope.code.java")
-                endIndex = response.body.find("scope.$apply();")
+                startIndex1 = response.body.find("scope.code.java") + len("scope.code.java")
+                endIndex1 = response.body.find("scope.$apply();")
+                
+                startIndex = response.body.find("public",startIndex1)
+                endIndex = response.body.rfind("';",startIndex1,endIndex1)
 
                 print "startIndex is %d and endIndex is %d" %(startIndex,endIndex)
-                print response.body[startIndex:endIndex]
+                code = response.body[startIndex:endIndex]
+                print code.decode('unicode-escape')
+
         
     def parse_ac_problem(self, response):
         print "parse_ac_problem with %s" %(response.url,)
