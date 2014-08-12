@@ -50,18 +50,19 @@ class LeetCodeSpider(InitSpider):
     def check_login_response(self, response):
         # check login succeed before going on
         logging.debug("checking login...")
-        if self.USEREMAIL in response.body:
+        if "Sign out" in response.body:
             logging.info("\n\nLOGIN SUCCESS!!\n\n")
             return self.initialized()            
         else:
             logging.error("\n\nLOGINED FAIL\n\n")
+            exit()
 
         
     def parse_ac_submission(self, response):
         """ the code page"""
 
         print "parse_ac_submission with %s" %(response.url,)
-        if self.USEREMAIL in response.body:
+        if "Sign out" in response.body:
             logging.info("\n\nSUBMISSION GOOD!!\n\n")
             
             if "scope.code.java" in response.body:
@@ -96,7 +97,7 @@ class LeetCodeSpider(InitSpider):
         """  submissions list page and go to each ac code"""
 
         logging.debug("parse_ac_problem with %s" %(response.url,))
-        if self.USEREMAIL in response.body:
+        if "Sign out" in response.body:
             sel = Selector(response)
             for a in sel.css(".status-accepted::attr('href')"):
                 link = "https://oj.leetcode.com" + a.extract()
@@ -112,7 +113,8 @@ class LeetCodeSpider(InitSpider):
         """ the question list page and go to submissions directly"""
 
         links = []
-        if self.USEREMAIL in response.body:
+        
+        if "Sign out" in response.body:
             
             sel = Selector(response)
 
