@@ -2,28 +2,39 @@ LC-Export
 ==========
 #About
 
-Tool to export your submissions from leetcode website
+Tool to export your ac submissions from leetcode website
+
+current version assumen all java code, will add c++ and python soon
+
+---
+#Setup
+
+Assume `python` `pip` `virtualenv` is ready
+
+1. cd to PROJECT_ROOT
+
+2. create a virtualenv
+`virtualenv venv`
+
+3. start to use virtualenv 
+`source venv/bin/activate`
+
+4. install dependencies
+`pip install -r requirements.txt`
+
+and you are ready to go
 
 ---
 
 # Usage
 
-TODO
+edit your email and password in `settings.cfg` file
 
----
-#Setup
 
-### create virtualenv
-    $ virtualenv venv
-### begin using virtualenv
-    $ source venv/bin/activate
-### deactivate virtualenv
-    $ deactivate
-### pip
-    pip freeze > requirements.txt.ori
-    pip install -r requirements.txt
+`cd leetcode` and run `scrapy crawl leetcode`
 
----
+report **export.md** is in the leetcode directory
+
 
 
 
