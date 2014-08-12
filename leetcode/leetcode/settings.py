@@ -19,3 +19,8 @@ NEWSPIDER_MODULE = 'leetcode.spiders'
 
 # DEPTH_LIMIT = 0
 DOWNLOAD_DELAY = 0.25
+
+ITEM_PIPELINES = {
+    'leetcode.pipelines.QuestionPipeline': 300,
+     'leetcode.pipelines.SubmissionPipeline': 800
+}

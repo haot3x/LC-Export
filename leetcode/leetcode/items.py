@@ -8,11 +8,15 @@
 import scrapy
 
 
-class LeetcodeItem(scrapy.Item):
+class Question(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
-    # title = scrapy.Field()
-    # link = scrapy.Field()
-    # desc = scrapy.Field()
-    # code = scrapy.Field()
+    title = scrapy.Field()
+    add_date = scrapy.Field()
+    ac_rates = scrapy.Field()
+    url = scrapy.Field()
+    description = scrapy.Field()
+
+class Submission(scrapy.Item):
+    code = scrapy.Field()
+    language = scrapy.Field()
