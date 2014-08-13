@@ -139,15 +139,15 @@ class LeetCodeSpider(InitSpider):
                     links.append(question['url'])
                     self.question_dict[question['url']] = question
 
-                    #yield Request(question['url'],callback=self.parse_ac_problem)
+                    yield Request(question['url'],callback=self.parse_ac_problem)
 
                     # uncomment below if need to pipeline
                     # yield question
             # logging.debug(self.question_dict)
             # logging.debug(links)
             
-            for link in links[:10]: 
-                yield Request(link,callback=self.parse_ac_problem)
+            # for link in links[:10]: 
+            #    yield Request(link,callback=self.parse_ac_problem)
 
         else:
             logging.error("parse() username not found")
