@@ -2,9 +2,7 @@ LC-Export
 ==========
 #About
 
-Tool to export your ac submissions from leetcode website
-
-current version assumen all java code, will add c++ and python soon
+This is a tool to export your **accepted** submissions from leetcode website, support `java`,`cpp` and `python`
 
 ---
 #Setup
