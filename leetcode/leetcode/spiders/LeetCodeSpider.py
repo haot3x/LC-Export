@@ -61,37 +61,41 @@ class LeetCodeSpider(InitSpider):
     def parse_ac_submission(self, response):
         """ the code page"""
 
-        print "parse_ac_submission with %s" %(response.url,)
+        logging.debug("parse_ac_submission with %s" %(response.url,))
         if "Sign out" in response.body:
-            logging.info("\n\nSUBMISSION GOOD!!\n\n")
+            logging.debug("\n\nSUBMISSION GOOD!!\n\n")
             
-            if "scope.code.java" in response.body:
-                logging.debug("scope.code.java FOUND")
-                startIndex1 = response.body.find("scope.code.java") + len("scope.code.java")
-                endIndex1 = response.body.find("scope.$apply();")
-                
-                startIndex = response.body.find("public",startIndex1)
-                endIndex = response.body.rfind("';",startIndex1,endIndex1)
+            sel = Selector(response)
+            lang = sel.css("#result_language:nth-child(1)::text").extract()[0]
+            lang = lang.encode('ascii','ignore')
 
-                logging.debug("startIndex is %d and endIndex is %d" %(startIndex,endIndex) )
-                code = response.body[startIndex:endIndex].decode('unicode-escape')
-                # logging.debug(code)
-                sub = Submission()
-                sub['code'] = code
-                sub['language'] = 'java'
 
-                # logging.debug(response.url)
-                # logging.debug(self.link_map[response.url])
-                # logging.debug(self.question_dict[self.link_map[response.url]])
-                
-                if self.code_map.has_key(self.link_map[response.url]):
-                    l = self.code_map[self.link_map[response.url]]
-                    l.append(sub)
-                    self.code_map[self.link_map[response.url]] = l
-                else:
-                    self.code_map[self.link_map[response.url]] = [sub]
-                
-                yield sub
+            logging.debug("scope.code.java FOUND")
+            startIndex1 = response.body.find("scope.code."+lang) + len("scope.code."+lang)
+            endIndex1 = response.body.find("scope.$apply();")
+            
+            startIndex = response.body.find("'",startIndex1)+1
+            endIndex = response.body.rfind("';",startIndex1,endIndex1)
+
+            logging.debug("startIndex is %d and endIndex is %d" %(startIndex,endIndex) )
+            code = response.body[startIndex:endIndex].decode('unicode-escape')
+            # logging.debug(code)
+            sub = Submission()
+            sub['code'] = code
+            sub['language'] = lang
+
+            # logging.debug(response.url)
+            # logging.debug(self.link_map[response.url])
+            # logging.debug(self.question_dict[self.link_map[response.url]])
+            
+            if self.code_map.has_key(self.link_map[response.url]):
+                l = self.code_map[self.link_map[response.url]]
+                l.append(sub)
+                self.code_map[self.link_map[response.url]] = l
+            else:
+                self.code_map[self.link_map[response.url]] = [sub]
+            
+            yield sub
 
     def parse_ac_problem(self, response):
         """  submissions list page and go to each ac code"""
@@ -135,15 +139,15 @@ class LeetCodeSpider(InitSpider):
                     links.append(question['url'])
                     self.question_dict[question['url']] = question
 
-                    yield Request(question['url'],callback=self.parse_ac_problem)
+                    #yield Request(question['url'],callback=self.parse_ac_problem)
 
                     # uncomment below if need to pipeline
                     # yield question
             # logging.debug(self.question_dict)
             # logging.debug(links)
             
-            # for link in links[:5]:    
-            #     yield Request(link,callback=self.parse_ac_problem)
+            for link in links[:10]: 
+                yield Request(link,callback=self.parse_ac_problem)
 
         else:
             logging.error("parse() username not found")
